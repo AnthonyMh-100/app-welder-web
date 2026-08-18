@@ -1,4 +1,4 @@
-# Sitio web — Julio Cárdenas, Estructuras Metálicas
+# Sitio web — Estructuras Metálicas
 
 Sitio web de presentación y captación de cotizaciones para un taller de estructuras metálicas en Ica, Perú. Muestra los servicios, el proceso de trabajo y una galería de trabajos realizados, y permite enviar solicitudes de cotización desde un formulario de contacto.
 
