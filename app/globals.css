@@ -61,14 +61,12 @@
   }
 }
 
-/* ============ LAYOUT SHELL ============ */
 .wrap {
   max-width: 1180px;
   margin: 0 auto;
   padding: 0 28px;
 }
 
-/* brushed steel background texture applied to dark sections */
 .steel-bg {
   background:
     repeating-linear-gradient(
@@ -99,7 +97,6 @@
   display: inline-block;
 }
 
-/* ============ BUTTON ============ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -119,7 +116,6 @@
   white-space: nowrap;
 }
 
-/* ============ WELD SEAM SIGNATURE ELEMENT ============ */
 .weld-seam {
   position: relative;
   width: 100%;
@@ -160,7 +156,6 @@
   }
 }
 
-/* ============ NAV ============ */
 .nav {
   position: fixed;
   top: 0;
@@ -273,7 +268,6 @@
   top: 6px;
 }
 
-/* ============ HERO ============ */
 .hero {
   position: relative;
   padding: 168px 0 96px;
@@ -339,7 +333,6 @@
   color: var(--color-dim);
 }
 
-/* ============ TRUST STRIP ============ */
 .trust-strip {
   padding: 26px 0;
   border-top: 1px solid var(--color-line);
@@ -359,7 +352,6 @@
   flex: none;
 }
 
-/* ============ SERVICES ============ */
 .services-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -426,7 +418,6 @@
   display: block;
 }
 
-/* ============ PROCESS ============ */
 .process-list {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -467,7 +458,6 @@
   border: 2px solid var(--color-spark);
 }
 
-/* ============ WORK PHOTO GALLERY ============ */
 .photo-gallery {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -555,7 +545,6 @@
   color: var(--color-spark);
 }
 
-/* ============ IMPACT BANNER ============ */
 .impact-banner {
   position: relative;
   padding: 88px 0 64px;
@@ -623,7 +612,6 @@
   }
 }
 
-/* ============ CONTACT ============ */
 .contact-grid {
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
@@ -706,7 +694,6 @@
   margin-top: 6px;
 }
 
-/* ============ FOOTER ============ */
 .footer-grid {
   display: flex;
   justify-content: space-between;
@@ -738,7 +725,6 @@
   border-top: 1px solid var(--color-line);
 }
 
-/* ============ WHATSAPP FAB ============ */
 .fab {
   position: fixed;
   bottom: 22px;
@@ -763,7 +749,6 @@
   color: #fff;
 }
 
-/* ============ REVEAL ON SCROLL ============ */
 .reveal {
   opacity: 0;
   transform: translateY(14px);
@@ -776,7 +761,6 @@
   transform: translateY(0);
 }
 
-/* ============ RESPONSIVE ============ */
 @media (max-width: 980px) {
   .hero-grid {
     grid-template-columns: 1fr;
