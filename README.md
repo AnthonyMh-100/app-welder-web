@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sitio web — Julio Cárdenas, Estructuras Metálicas
 
-## Getting Started
+Sitio web de presentación y captación de cotizaciones para un taller de estructuras metálicas en Ica, Perú. Muestra los servicios, el proceso de trabajo y una galería de trabajos realizados, y permite enviar solicitudes de cotización desde un formulario de contacto.
 
-First, run the development server:
+Construido con [Next.js](https://nextjs.org) (App Router), React y Tailwind CSS v4.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Tecnologías
+
+- **Next.js 16** (App Router, React Server Components, Server Actions)
+- **React 19** + TypeScript
+- **Tailwind CSS v4** (`@tailwindcss/postcss`)
+- **Resend** + `@react-email/render` (envío de correos del formulario)
+
+## Estructura de rutas
+
+| Ruta | Sección |
+| --- | --- |
+| `/` | Portada: hero, confianza, banner y CTA |
+| `/services` | Servicios ofrecidos |
+| `/process` | Proceso de trabajo |
+| `/work` | Galería de trabajos realizados |
+| `/contact` | Formulario de contacto y datos |
+
+## Estructura del proyecto
+
+```text
+app/
+├── api/send/route.tsx     # API de envío de correos (Resend)
+├── contact/actions.ts     # Server Action del formulario (validación + envío)
+└── ...                    # Páginas de cada ruta
+components/
+├── layout/                # Navbar, Footer, WhatsAppFab
+├── sections/              # Secciones de cada página
+├── ui/                    # Botones, títulos, reveal, etc.
+├── forms/                 # ContactForm
+├── emails/                # ContactInquiryEmail (plantilla del correo)
+└── shared/                # Brand, iconos
+hooks/                     # Hooks personalizados (scroll, reveal, etc.)
+lib/                       # Datos del sitio (config, servicios, proceso, trabajos)
+services/                  # services-send.ts (cliente del envío)
+types/                     # Tipos compartidos
+utils/                     # Utilidades (whatsapp, sparks)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Características
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Diseño oscuro estilo industrial con acentos naranja, tipografías `Inter`, `Oswald` y `JetBrains Mono`.
+- Rutas estáticas generadas en build con SEO por página (título, descripción, Open Graph).
+- Galería de trabajos con `next/image` (optimización de imágenes).
+- Botones de contacto por WhatsApp en toda la navegación.
+- Formulario de contacto con validación en cliente y servidor, estados de envío y plantilla de correo HTML con todos los campos (nombre, teléfono, tipo de trabajo, detalle).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Variables de entorno
 
-## Learn More
+Crear un archivo `.env` en la raíz:
 
-To learn more about Next.js, take a look at the following resources:
+```env
+NEXT_RESEND_API_KEY=re_...
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `NEXT_RESEND_API_KEY`: API key de [Resend](https://resend.com) para el envío de correos.
+- `NEXT_PUBLIC_SITE_URL`: URL base del sitio (usada para llamar a `/api/send`).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Para producción, revisar en `app/api/send/route.tsx` los valores de `from` y `to` (reemplazar `contact@resend.dev` por el dominio verificado y el destinatario final).
 
-## Deploy on Vercel
+## Puesta en marcha
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm install
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Abrir [http://localhost:3000](http://localhost:3000).
+
+## Scripts
+
+```bash
+npm run dev     # servidor de desarrollo
+npm run build   # build de producción
+npm run start   # servidor de producción
+npm run lint    # ESLint
+```
+
+## Convenciones
+
+El proyecto sigue las convenciones definidas en [`RULE.md`](./RULE.md): separación de componentes por responsabilidad, App Router para rutas, Tailwind CSS, nombres en `camelCase`, hooks en `hooks/`, utilidades separadas, programación funcional y uso preferente de funciones flecha.

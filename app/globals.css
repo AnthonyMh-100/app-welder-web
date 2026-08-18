@@ -1,26 +1,868 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-void: #131417;
+  --color-panel: #1c1e22;
+  --color-panel-raised: #26292e;
+  --color-steel: #8a929b;
+  --color-steel-light: #c9cfd4;
+  --color-ink: #edeef0;
+  --color-dim: #a3a9af;
+  --color-spark: #ff7a1a;
+  --color-spark-hot: #ffd166;
+  --color-rust: #6e3a20;
+  --color-line: rgba(201, 207, 212, 0.12);
+
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-oswald);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    margin: 0;
+    background: var(--color-void);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  img,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    margin: 0;
+  }
+  p {
+    margin: 0;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-spark-hot);
+    outline-offset: 3px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ============ LAYOUT SHELL ============ */
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* brushed steel background texture applied to dark sections */
+.steel-bg {
+  background:
+    repeating-linear-gradient(
+      115deg,
+      rgba(255, 255, 255, 0.02) 0px,
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px,
+      transparent 7px
+    ),
+    linear-gradient(180deg, var(--color-void), #0f1012 120%);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-spark);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow::before {
+  content: "";
+  width: 18px;
+  height: 2px;
+  background: var(--color-spark);
+  display: inline-block;
+}
+
+/* ============ BUTTON ============ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  padding: 12px 22px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease;
+  white-space: nowrap;
+}
+
+/* ============ WELD SEAM SIGNATURE ELEMENT ============ */
+.weld-seam {
+  position: relative;
+  width: 100%;
+  line-height: 0;
+  overflow: visible;
+}
+.weld-seam svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.weld-seam path {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.spark {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-spark-hot);
+  box-shadow:
+    0 0 6px 1px var(--color-spark-hot),
+    0 0 12px 2px var(--color-spark);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: sparkFly 0.75s ease-out forwards;
+}
+@keyframes sparkFly {
+  0% {
+    transform: translate(-50%, -50%) translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translate(var(--dx), calc(var(--dy) + 18px)) scale(0.3);
+    opacity: 0;
+  }
+}
+
+/* ============ NAV ============ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 18px 0;
+  transition:
+    background 0.3s ease,
+    padding 0.3s ease,
+    border-color 0.3s ease;
+  border-bottom: 1px solid transparent;
+}
+.nav.scrolled {
+  background: rgba(19, 20, 23, 0.88);
+  backdrop-filter: blur(10px);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-line);
+}
+.brand-mark {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  flex: none;
+}
+.brand-mark svg {
+  width: 100%;
+  height: 100%;
+}
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+}
+.brand-name span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 400;
+  color: var(--color-dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.nav-links a {
+  font-size: 14.5px;
+  color: var(--color-steel-light);
+  transition: color 0.2s ease;
+  position: relative;
+}
+.nav-links a:hover {
+  color: var(--color-ink);
+}
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: -5px;
+  height: 2px;
+  background: var(--color-spark);
+  transition: right 0.25s ease;
+}
+.nav-links a:hover::after {
+  right: 0;
+}
+.nav-links a.active {
+  color: var(--color-ink);
+}
+.nav-links a.active::after {
+  right: 0;
+}
+.nav-toggle {
+  display: none;
+  background: none;
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  width: 42px;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.nav-toggle span,
+.nav-toggle span::before,
+.nav-toggle span::after {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--color-ink);
+  position: relative;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+.nav-toggle span::before {
+  position: absolute;
+  top: -6px;
+}
+.nav-toggle span::after {
+  position: absolute;
+  top: 6px;
+}
+
+/* ============ HERO ============ */
+.hero {
+  position: relative;
+  padding: 168px 0 96px;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 640px;
+  height: 640px;
+  background: radial-gradient(circle, rgba(255, 122, 26, 0.1), transparent 70%);
+  pointer-events: none;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 60px;
+  align-items: center;
+}
+.hero-visual {
+  position: relative;
+  aspect-ratio: 1 / 1.05;
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.03) 0px,
+      rgba(255, 255, 255, 0.03) 2px,
+      transparent 2px,
+      transparent 16px
+    ),
+    linear-gradient(160deg, #24262b, #17181b 75%);
+  border: 1px solid var(--color-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+.hero-visual svg {
+  width: 100%;
+  height: 100%;
+}
+.hero-visual::before {
+  content: "MEDIDAS · MATERIAL · ACABADO";
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--color-dim);
+}
+.hero-visual::after {
+  content: "REV. 01 — TALLER PROPIO";
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--color-dim);
+}
+
+/* ============ TRUST STRIP ============ */
+.trust-strip {
+  padding: 26px 0;
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--color-steel-light);
+}
+.trust-item svg {
+  width: 20px;
+  height: 20px;
+  color: var(--color-spark);
+  flex: none;
+}
+
+/* ============ SERVICES ============ */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--color-line);
+  border: 1px solid var(--color-line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.plate {
+  background: var(--color-panel);
+  padding: 34px 30px;
+  position: relative;
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+.plate:hover {
+  background: var(--color-panel-raised);
+}
+.plate::before,
+.plate::after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #3a3d43;
+  box-shadow:
+    inset 0 1px 1px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+.plate::before {
+  top: 10px;
+  left: 10px;
+}
+.plate::after {
+  top: 10px;
+  right: 10px;
+}
+.plate-icon {
+  width: 44px;
+  height: 44px;
+  color: var(--color-spark);
+  margin-bottom: 20px;
+}
+.plate h3 {
+  font-size: 19px;
+  margin-bottom: 10px;
+}
+.plate p {
+  color: var(--color-dim);
+  font-size: 14.5px;
+  margin-bottom: 16px;
+}
+.plate .spec {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--color-steel);
+  text-transform: uppercase;
+  border-top: 1px dashed var(--color-line);
+  padding-top: 12px;
+  display: block;
+}
+
+/* ============ PROCESS ============ */
+.process-list {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  position: relative;
+}
+.process-seam {
+  grid-column: 1 / -1;
+  margin-bottom: -14px;
+}
+.process-step {
+  padding-top: 26px;
+  position: relative;
+}
+.process-step .num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-spark);
+  display: block;
+  margin-bottom: 10px;
+}
+.process-step h3 {
+  font-size: 16.5px;
+  margin-bottom: 8px;
+}
+.process-step p {
+  font-size: 13.5px;
+  color: var(--color-dim);
+}
+.process-dot {
+  position: absolute;
+  top: -5px;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-void);
+  border: 2px solid var(--color-spark);
+}
+
+/* ============ WORK PHOTO GALLERY ============ */
+.photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
+}
+.photo-frame {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--color-panel);
+  border: 1px solid var(--color-line);
+}
+.photo-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+}
+.photo-frame .frame-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--color-steel-light);
+  text-transform: uppercase;
+  background: linear-gradient(to top, rgba(13, 14, 16, 0.85), transparent);
+  padding: 26px 16px 12px;
+  text-align: left;
+}
+.photo-frame::before,
+.photo-frame::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--color-steel);
+  opacity: 0.5;
+  z-index: 1;
+}
+.photo-frame::before {
+  top: 8px;
+  left: 8px;
+  border-right: none;
+  border-bottom: none;
+}
+.photo-frame::after {
+  bottom: 8px;
+  right: 8px;
+  border-left: none;
+  border-top: none;
+}
+.work-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.work-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: var(--color-steel-light);
+  background: var(--color-panel);
+  border: 1px solid var(--color-line);
+  padding: 9px 16px;
+  border-radius: 999px;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+.work-chip:hover {
+  border-color: rgba(255, 122, 26, 0.5);
+  color: var(--color-ink);
+}
+.work-chip svg {
+  width: 15px;
+  height: 15px;
+  color: var(--color-spark);
+}
+
+/* ============ IMPACT BANNER ============ */
+.impact-banner {
+  position: relative;
+  padding: 88px 0 64px;
+  overflow: hidden;
+}
+.impact-visual {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  padding: 20px 20px 6px;
+  background:
+    linear-gradient(rgba(201, 207, 212, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201, 207, 212, 0.05) 1px, transparent 1px),
+    linear-gradient(160deg, #201a12 0%, #17181b 55%);
+  background-size:
+    34px 34px,
+    34px 34px,
+    auto;
+}
+.impact-visual::before {
+  content: "ESC 1:20";
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--color-dim);
+}
+.impact-visual::after {
+  content: "TALLER PROPIO — DISEÑO A MEDIDA";
+  position: absolute;
+  top: 14px;
+  right: 20px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--color-dim);
+}
+.impact-visual svg {
+  width: 100%;
+  height: auto;
+}
+.impact-icon {
+  transition: transform 0.25s ease;
+}
+.impact-icon-group:hover .impact-icon {
+  transform: translateY(-4px);
+}
+.impact-glow {
+  animation: pulseGlow 3.2s ease-in-out infinite;
+  transform-origin: center;
+}
+@keyframes pulseGlow {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.15);
+  }
+}
+
+/* ============ CONTACT ============ */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 56px;
+}
+.contact-info .row {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-line);
+}
+.contact-info .row svg {
+  width: 20px;
+  height: 20px;
+  color: var(--color-spark);
+  flex: none;
+  margin-top: 2px;
+}
+.contact-info dt {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-dim);
+  margin-bottom: 4px;
+}
+.contact-info dd {
+  margin: 0;
+  font-size: 15px;
+}
+.form-panel {
+  background: var(--color-panel);
+  border: 1px solid var(--color-line);
+  border-radius: 6px;
+  padding: 32px;
+}
+.field {
+  margin-bottom: 18px;
+}
+.field label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-dim);
+  margin-bottom: 8px;
+}
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  background: var(--color-void);
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  padding: 12px 14px;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  transition: border-color 0.2s ease;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--color-spark);
+  outline: none;
+}
+.field textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+.form-note {
+  font-size: 12px;
+  color: var(--color-dim);
+  margin-top: 6px;
+}
+.form-error {
+  color: var(--color-spark);
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+/* ============ FOOTER ============ */
+.footer-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+.footer-links {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.footer-links a {
+  font-size: 13.5px;
+  color: var(--color-dim);
+}
+.footer-links a:hover {
+  color: var(--color-ink);
+}
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 12.5px;
+  color: var(--color-dim);
+  padding-top: 24px;
+  border-top: 1px solid var(--color-line);
+}
+
+/* ============ WHATSAPP FAB ============ */
+.fab {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  z-index: 90;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2fbf5c, #1e9e48);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 28px -8px rgba(31, 158, 72, 0.6);
+  transition: transform 0.2s ease;
+}
+.fab:hover {
+  transform: scale(1.07);
+}
+.fab svg {
+  width: 26px;
+  height: 26px;
+  color: #fff;
+}
+
+/* ============ REVEAL ON SCROLL ============ */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 980px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-visual {
+    max-width: 420px;
+    margin: 0 auto;
+    order: -1;
+  }
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .photo-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .process-list {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 32px;
+  }
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 720px) {
+  .nav-links {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: rgba(19, 20, 23, 0.98);
+    backdrop-filter: blur(10px);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    padding: 8px 28px 20px;
+    border-bottom: 1px solid var(--color-line);
+    transform: translateY(-8px);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+  .nav-links.open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .nav-links a {
+    padding: 12px 0;
+    width: 100%;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .nav-links .btn {
+    margin-top: 14px;
+  }
+  .nav-toggle {
+    display: flex;
+  }
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  .photo-gallery {
+    grid-template-columns: 1fr;
+  }
+  .process-list {
+    grid-template-columns: 1fr;
+  }
+  .impact-visual {
+    padding: 16px 12px 6px;
+  }
+  .impact-visual::before,
+  .impact-visual::after {
+    font-size: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
